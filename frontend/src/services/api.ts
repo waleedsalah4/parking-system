@@ -1,4 +1,4 @@
-import type { Gate } from "@/types";
+import type { Gate, Zone } from "@/types";
 import { localStorageEnum } from "@/types/enums";
 
 const BASE = "http://localhost:3000/api/v1";
@@ -32,5 +32,22 @@ export const api = {
   // public
   async getGates(): Promise<Gate[]> {
     return http("/master/gates");
+  },
+  async getZones(gateId: string): Promise<Zone[]> {
+    return http(`/master/zones?gateId=${encodeURIComponent(gateId)}`);
+  },
+  async getSubscription(id: string) {
+    return http(`/subscriptions/${id}`);
+  },
+  async checkin(body: {
+    gateId: string;
+    zoneId: string;
+    type: "visitor" | "subscriber";
+    subscriptionId?: string;
+  }) {
+    return http("/tickets/checkin", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
   },
 };

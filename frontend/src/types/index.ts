@@ -77,3 +77,6 @@ export interface LoginResponse {
   token: string;
   user: User;
 }
+
+export type Status = "connected" | "connecting" | "disconnected";
+export type UserGateTab = "visitor" | "subscriber";
