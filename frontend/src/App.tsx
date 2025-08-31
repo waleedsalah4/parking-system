@@ -7,7 +7,7 @@ import AdminLayout from "@/Layout/AdminLayout";
 import Home from "@/pages/Home";
 import GatePage from "@/pages/GatePage";
 import CheckpointPage from "@/pages/CheckpointPage";
-import Login from "@/pages/admin/Login";
+import Login from "@/pages/Login";
 import Users from "@/pages/admin/Users";
 import Reports from "@/pages/admin/Reports";
 import Control from "@/pages/admin/Control";

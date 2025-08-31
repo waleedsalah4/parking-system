@@ -66,11 +66,13 @@ export type Breakdown = {
   amount: number;
 };
 
+export type UserRole = "admin" | "employee";
+
 export interface User {
   id: string;
   username: string;
   name: string;
-  role: "admin" | "employee";
+  role: UserRole;
 }
 
 export interface LoginResponse {

@@ -1,4 +1,11 @@
-import type { Gate, Subscription, Ticket, UserGateTab, Zone } from "@/types";
+import type {
+  Gate,
+  LoginResponse,
+  Subscription,
+  Ticket,
+  UserGateTab,
+  Zone,
+} from "@/types";
 import { localStorageEnum } from "@/types/enums";
 
 export interface ApiErrorResponse {
@@ -115,6 +122,15 @@ class ApiService {
     }
   }
 
+  async login(credentials: {
+    username: string;
+    password: string;
+  }): Promise<LoginResponse> {
+    return this.request("/auth/login", {
+      method: "POST",
+      body: JSON.stringify(credentials),
+    });
+  }
   // Gates
   async getGates(): Promise<Gate[]> {
     return this.request<Gate[]>("/master/gates");
