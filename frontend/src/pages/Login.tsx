@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
-import { api } from "@/services/api";
-import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "@/services/api";
 import { User } from "lucide-react";
 import { localStorageEnum } from "@/types/enums";
-import type { UserRole } from "@/types";
+import type { User as UserType } from "@/types";
+import toast from "react-hot-toast";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
   const authed = localStorage.getItem(localStorageEnum.token);
-  const role = localStorage.getItem(localStorageEnum.role) as UserRole;
+  const user = JSON.parse(
+    localStorage.getItem(localStorageEnum.user) as string
+  ) as UserType;
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -18,7 +20,7 @@ export default function AdminLogin() {
 
   useEffect(() => {
     if (authed) {
-      if (role === "admin") {
+      if (user.role === "admin") {
         navigate("/admin/users");
       } else {
         navigate("/checkpoint");
@@ -31,10 +33,13 @@ export default function AdminLogin() {
     isPending,
     error,
   } = useMutation({
-    mutationFn: api.login,
+    // mutationFn: api.login,
+    mutationFn: (credentials: { username: string; password: string }) =>
+      api.login(credentials),
     onSuccess: (data) => {
-      if (data.token) {
+      if (data) {
         localStorage.setItem(localStorageEnum.token, data.token);
+        localStorage.setItem(localStorageEnum.user, JSON.stringify(data.user));
         toast.success("Logged in successfully");
         if (data.user.role === "admin") {
           navigate("/admin/users");
@@ -52,10 +57,11 @@ export default function AdminLogin() {
     loginUser(credentials);
   };
 
-  const onBack = () => {
-    navigate(-1);
-  };
+  // const onBack = () => {
+  //   navigate(-1);
+  // };
 
+  console.log(error);
   return (
     <div className="flex items-center justify-center">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
@@ -114,13 +120,6 @@ export default function AdminLogin() {
               className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
             >
               {isPending ? "Logging in..." : "Login"}
-            </button>
-            <button
-              type="button"
-              onClick={onBack}
-              className="flex-1 rounded-lg bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400"
-            >
-              Back
             </button>
           </div>
         </form>

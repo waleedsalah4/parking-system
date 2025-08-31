@@ -31,11 +31,11 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/gate/:gateId", element: <GatePage /> },
       { path: "/checkpoint", element: <CheckpointPage /> },
+      { path: "/login", element: <Login /> },
       {
         path: "/admin",
         element: <AdminLayout />,
         children: [
-          { index: true, element: <Login /> },
           { path: "users", element: <Users /> },
           { path: "reports", element: <Reports /> },
           { path: "control", element: <Control /> },

@@ -126,7 +126,8 @@ class ApiService {
     username: string;
     password: string;
   }): Promise<LoginResponse> {
-    return this.request("/auth/login", {
+    console.log(credentials);
+    return this.request<LoginResponse>("/auth/login", {
       method: "POST",
       body: JSON.stringify(credentials),
     });
