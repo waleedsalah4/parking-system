@@ -1,14 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/services/api";
 import { Building } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useGates } from "@/hooks/useGateQueries";
 
 function Home() {
   const navigate = useNavigate();
-  const { data: gates } = useQuery({
-    queryKey: ["gates"],
-    queryFn: api.getGates,
-  });
+
+  const gatesQuery = useGates();
+  const gates = gatesQuery.data;
 
   return (
     <div className="mx-auto max-w-4xl p-6">

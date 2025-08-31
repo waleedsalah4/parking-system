@@ -3,7 +3,7 @@ import { Timer, XCircle } from "lucide-react";
 
 interface Props {
   zones: Zone[];
-  canSelectZone: (zone: Zone) => boolean | null;
+  canSelectZone: (zone: Zone) => boolean | undefined;
   setSelectedZone: (zone: Zone) => void;
   selectedZone: Zone | null;
   activeTab: UserGateTab;

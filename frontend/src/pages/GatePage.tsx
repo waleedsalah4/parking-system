@@ -1,112 +1,73 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { api } from "@/services/api";
+import {
+  useGates,
+  useZones,
+  useSubscription,
+  useCheckIn,
+  useWebSocketSubscription,
+} from "@/hooks/useGateQueries";
 import { wsService } from "@/services/ws";
-import type { Gate, Subscription, Ticket, Zone } from "@/types";
+import { type CheckInRequest } from "@/services/api";
+import type { Ticket, Zone } from "@/types";
 import TicketModal from "@/components/gates/TicketModal";
 import GateHeader from "@/components/gates/GateHeader";
 import GateNotFound from "@/components/gates/GateNotFound";
-import toast from "react-hot-toast";
 import UsersTabs from "@/components/gates/UsersTabs";
-import SubscriberForm from "@/components/gates/subscriberForm";
+import SubscriberForm from "@/components/gates/SubscriberForm";
 import ZoneCard from "@/components/gates/ZoneCard";
+import useDebounce from "@/hooks/useDebounce";
 
 function GatePage() {
   const { gateId = "" } = useParams();
-  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<"visitor" | "subscriber">(
     "visitor"
   );
-  const status = wsService.getStatus();
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [subscriptionId, setSubscriptionId] = useState("");
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [isVerifying, setIsVerifying] = useState(false);
   const [showTicket, setShowTicket] = useState(false);
   const [currentTicket, setCurrentTicket] = useState<Ticket | null>(null);
+  const debouncedSubscriptionId = useDebounce(subscriptionId);
 
-  const { data: gates } = useQuery({
-    queryKey: ["gates"],
-    queryFn: api.getGates,
+  // WebSocket status and subscription
+  const status = wsService.getStatus();
+  useWebSocketSubscription(gateId);
+
+  //queries
+  const gatesQuery = useGates();
+  const zonesQuery = useZones(gateId);
+  const subscriptionQuery = useSubscription(debouncedSubscriptionId, {
+    enabled: !!debouncedSubscriptionId && activeTab === "subscriber",
   });
-  const { data: zones } = useQuery({
-    queryKey: ["zones"],
-    queryFn: () => api.getZones(gateId),
-  });
 
-  const gate = gates?.find((g: Gate) => g.id === gateId);
+  const checkInMutation = useCheckIn(gateId);
 
-  useEffect(() => {
-    if (gateId) {
-      wsService.subscribe(gateId);
-    }
+  //data
+  const gate = gatesQuery.data?.find((g) => g.id === gateId);
+  const zones = zonesQuery.data;
+  const subscription = subscriptionQuery.data;
 
-    const handleZoneUpdate = () => {
-      console.log("runs");
-      queryClient.invalidateQueries({
-        queryKey: ["zones"],
-      });
-    };
-
-    // Test connection events
-    wsService.on("connection", (data: any) => {
-      console.log("Connection status changed:", data);
-    });
-
-    wsService.on("zone-update", handleZoneUpdate);
-
-    return () => {
-      wsService.off("zone-update", handleZoneUpdate);
-      wsService.unsubscribe(gateId);
-    };
-  }, [gateId]);
-
-  const verifySubscription = async () => {
-    if (!subscriptionId.trim()) return;
-
-    setIsVerifying(true);
-    try {
-      const sub = await api.getSubscription(subscriptionId);
-      setSubscription(sub);
-    } catch (error: any) {
-      toast.error(error?.message);
-      setSubscription(null);
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
-  const handleCheckin = async () => {
+  const handleCheckIn = () => {
     if (!selectedZone) return;
 
-    try {
-      // setState((prev: any) => ({ ...prev, isLoading: true, error: null }));
-      setIsLoading(true);
-      const checkinData: any = {
-        gateId,
-        zoneId: selectedZone.id,
-        type: activeTab,
-      };
+    const checkInData: CheckInRequest = {
+      gateId,
+      zoneId: selectedZone.id,
+      type: activeTab,
+    };
 
-      if (activeTab === "subscriber") {
-        checkinData.subscriptionId = subscriptionId;
-      }
-
-      const response = await api.checkin(checkinData);
-      setCurrentTicket(response.ticket);
-      setShowTicket(true);
-      setSelectedZone(null);
-      setSubscriptionId("");
-      setSubscription(null);
-      setIsLoading(false);
-      // setState((prev: any) => ({ ...prev, isLoading: false }));
-    } catch (error: any) {
-      toast.error(error.message);
-      setIsLoading(false);
+    if (activeTab === "subscriber") {
+      checkInData.subscriptionId = subscriptionId;
     }
+
+    checkInMutation.mutate(checkInData, {
+      onSuccess: (response) => {
+        setCurrentTicket(response.ticket);
+        setShowTicket(true);
+        setSelectedZone(null);
+        setSubscriptionId("");
+      },
+    });
   };
 
   const canSelectZone = (zone: Zone) => {
@@ -123,7 +84,7 @@ function GatePage() {
     }
   };
 
-  if (!gate) {
+  if (!gate && !gatesQuery.isLoading) {
     return <GateNotFound />;
   }
 
@@ -139,13 +100,18 @@ function GatePage() {
 
           <div className="p-6">
             {activeTab === "subscriber" && (
-              <SubscriberForm
-                isVerifying={isVerifying}
-                setSubscriptionId={setSubscriptionId}
-                subscription={subscription}
-                subscriptionId={subscriptionId}
-                verifySubscription={verifySubscription}
-              />
+              <div className="mb-6">
+                <SubscriberForm
+                  setSubscriptionId={setSubscriptionId}
+                  subscription={subscription}
+                  subscriptionId={subscriptionId}
+                />
+                {subscriptionQuery.error && (
+                  <div className="text-sm text-red-600">
+                    <p>{subscriptionQuery.error.message}</p>
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Zone Cards */}
@@ -162,16 +128,16 @@ function GatePage() {
             {/* Action Button */}
             <div className="mt-6 flex justify-center">
               <button
-                onClick={handleCheckin}
+                onClick={handleCheckIn}
                 disabled={
                   !selectedZone ||
-                  isLoading ||
+                  checkInMutation.isPending ||
                   (activeTab === "subscriber" &&
                     (!subscription || !subscription.active))
                 }
                 className="rounded-lg bg-blue-600 px-8 py-3 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isLoading ? "Processing..." : "Check In"}
+                {checkInMutation.isPending ? "Processing..." : "Check In"}
               </button>
             </div>
           </div>

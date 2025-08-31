@@ -8,7 +8,7 @@ export default function GateHeader({
   gate,
   status,
 }: {
-  gate: Gate;
+  gate: Gate | undefined;
   status: Status;
 }) {
   const navigate = useNavigate();
@@ -31,8 +31,10 @@ export default function GateHeader({
             <div className="flex items-center space-x-3">
               <Building className="h-6 w-6 text-blue-600" />
               <div>
-                <h1 className="text-xl font-bold text-gray-900">{gate.name}</h1>
-                <p className="text-sm text-gray-600">{gate.location}</p>
+                <h1 className="text-xl font-bold text-gray-900">
+                  {gate?.name}
+                </h1>
+                <p className="text-sm text-gray-600">{gate?.location}</p>
               </div>
             </div>
           </div>

@@ -3,7 +3,7 @@ import type { Gate, Ticket, Zone } from "@/types";
 
 type Props = {
   ticket: Ticket | null;
-  gate: Gate;
+  gate: Gate | undefined;
   onClose: () => void;
   zone: Zone | undefined;
 };
@@ -38,7 +38,7 @@ export default function TicketModal({ ticket, gate, zone, onClose }: Props) {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Gate:</span>
-                <span className="font-medium">{gate.name}</span>
+                <span className="font-medium">{gate?.name}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Zone:</span>
