@@ -1,5 +1,40 @@
-function Home() {
-  return <div>Home</div>;
-}
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/services/api";
+import { Building } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
+function Home() {
+  const navigate = useNavigate();
+  const { data: gates } = useQuery({
+    queryKey: ["gates"],
+    queryFn: api.getGates,
+  });
+
+  return (
+    <div className="mx-auto max-w-4xl p-6">
+      <div className="mb-8 rounded-lg bg-white p-8 shadow-lg">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {gates?.map((gate) => (
+            <div
+              key={gate.id}
+              onClick={() => navigate(`gate/${gate.id}`)}
+              className="cursor-pointer rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 transition-all hover:shadow-md"
+            >
+              <div className="mb-3 flex items-center space-x-3">
+                <Building className="h-6 w-6 text-blue-600" />
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {gate.name}
+                </h3>
+              </div>
+              <p className="mb-2 text-sm text-gray-600">{gate.location}</p>
+              <p className="text-xs text-blue-600">
+                {gate.zoneIds.length} zones available
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 export default Home;
