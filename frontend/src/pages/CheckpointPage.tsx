@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Subscription } from "@/types";
-import { localStorageEnum } from "@/types/enums";
 import { CheckCircle } from "lucide-react";
 import {
   useCheckOut,
   useSubscription,
   useTicket,
 } from "@/hooks/useGateQueries";
+import { useAuthStore } from "@/store/authStore";
 
 function CheckpointPage() {
   const navigate = useNavigate();
   const [ticketId, setTicketId] = useState("");
   const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const user = JSON.parse(
-    localStorage.getItem(localStorageEnum.user) as string
-  );
+  const { user } = useAuthStore();
 
   useEffect(() => {
     // Redirect if not employee/admin

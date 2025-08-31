@@ -3,24 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/services/api";
 import { User } from "lucide-react";
-import { localStorageEnum } from "@/types/enums";
-import type { User as UserType } from "@/types";
 import toast from "react-hot-toast";
+import { storeTokens } from "@/utlis/helpers";
+import { useAuthStore } from "@/store/authStore";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const authed = localStorage.getItem(localStorageEnum.token);
-  const user = JSON.parse(
-    localStorage.getItem(localStorageEnum.user) as string
-  ) as UserType;
+  const { isAuthenticated, user, setAuth } = useAuthStore();
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
 
   useEffect(() => {
-    if (authed) {
-      if (user.role === "admin") {
+    if (isAuthenticated) {
+      if (user?.role === "admin") {
         navigate("/admin/users");
       } else {
         navigate("/checkpoint");
@@ -38,8 +35,8 @@ export default function AdminLogin() {
       api.login(credentials),
     onSuccess: (data) => {
       if (data) {
-        localStorage.setItem(localStorageEnum.token, data.token);
-        localStorage.setItem(localStorageEnum.user, JSON.stringify(data.user));
+        storeTokens(data);
+        setAuth(data);
         toast.success("Logged in successfully");
         if (data.user.role === "admin") {
           navigate("/admin/users");
