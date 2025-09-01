@@ -1,7 +1,7 @@
-import AddRushHour from "@/components/admin/AddRushHour";
-import AddVacation from "@/components/admin/AddVacation";
-import CategoryRateEditor from "@/components/admin/CategoryRateEditor";
-import ZoneControl from "@/components/admin/ZoneControl";
+import AddRushHour from "@/components/admin/controls/AddRushHour";
+import AddVacation from "@/components/admin/controls/AddVacation";
+import CategoryRateEditor from "@/components/admin/controls/CategoryRateEditor";
+import ZoneControl from "@/components/admin/controls/ZoneControl";
 import {
   useAddRushHour,
   useAddVacation,
