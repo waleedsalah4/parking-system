@@ -139,11 +139,9 @@ const handleConnectionChange = (data: { status: string }) => {
 
 ### Automated Tests
 
-To run the frontend tests, navigate to the `frontend` directory and execute:
+**Note**: Automated testing is currently a work in progress. As the developer is still learning automation testing, comprehensive test coverage has not yet been implemented.
 
-```bash
-npm test
-```
+While some initial test setup has been explored, the project does not currently have fully functional automated tests. Manual verification steps are recommended to ensure application functionality.
 
 ### Manual Verification Steps
 
@@ -162,12 +160,11 @@ Follow these steps to manually verify the application's functionality, especiall
 
     - **Update Category Rate**: Go to "Control" -> "Category Rates". Change a category's normal or special rate and save. Observe a new entry appearing in "Recent Activity" (e.g., "category-update on category [id]").
     - **Toggle Zone Open/Close**: Go to "Control" -> "Zones". Toggle a zone's "Open" status. Observe a new entry in "Recent Activity" (e.g., "zone-update on zone [id]").
-    - **Add Rush Hour/Vacation**: Go to "Control" -> "Rush Hours" or "Vacations" and add a new entry. Observe a new entry in "Recent Activity" (e.g., "rush-hour-add on rushHour [id]").
+    - **Add Rush Hour/Vacation**: Go to "Control" -> "Rush Hours" or "Vacations" and add a new entry.
 
 5.  **Test Gate Screen & WebSocket Subscription (Employee)**:
     - Open a **new Incognito/Private window** in your browser.
     - Navigate to a gate, e.g., `http://localhost:5173/gate/gate1`. You will automatically be subscribed to this gate's updates.
-    - **Important**: Keep the browser's developer console open in this window (F12) and monitor the "Console" and "Network" (WebSocket tab) for `wsService` messages.
     - **Perform a Check-in (Visitor)**:
       - Select an available parking zone (e.g., Zone A).
       - Click the "Check In" button. A ticket modal should appear.
