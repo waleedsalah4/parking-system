@@ -81,7 +81,7 @@ function AdminLayout() {
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 overflow-hidden">
+          <div className="mt-4 flex-1 overflow-hidden">
             <Outlet />
           </div>
         </div>

@@ -97,3 +97,18 @@ export interface ParkingState {
   subscriberCount: number;
   open: boolean;
 }
+
+export interface Employee {
+  id: string;
+  active: boolean;
+  cars: { plate: string; brand: string; model: string; color: string }[];
+  category: string;
+  currentCheckins: {
+    ticketId: string;
+    zoneId: "zone_vip";
+    checkinAt: string;
+  }[];
+  expiresAt: string;
+  startsAt: string;
+  userName: string;
+}

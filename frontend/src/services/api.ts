@@ -1,4 +1,5 @@
 import type {
+  Employee,
   Gate,
   LoginResponse,
   ParkingState,
@@ -174,6 +175,20 @@ class ApiService {
   //reports
   async getParkingState(): Promise<ParkingState[]> {
     return this.request<ParkingState[]>(`/admin/reports/parking-state/`);
+  }
+  async getUsers(): Promise<Employee[]> {
+    return this.request<Employee[]>("/admin/subscriptions");
+  }
+
+  async createUser(body: {
+    username: string;
+    password: string;
+    role: "employee" | "admin";
+  }) {
+    return this.request("/admin/subscriptions", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
   }
 }
 
