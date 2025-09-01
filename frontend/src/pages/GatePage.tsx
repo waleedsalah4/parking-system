@@ -93,12 +93,12 @@ function GatePage() {
       {/* Header */}
       <GateHeader gate={gate} status={status} />
 
-      <div className="mx-auto max-w-6xl px-6 py-8">
+      <div className="mx-auto max-w-6xl px-0 py-8 md:px-2 lg:px-6">
         {/* Tabs */}
         <div className="mb-6 rounded-lg bg-white shadow-sm">
           <UsersTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-          <div className="p-6">
+          <div className="p-3 md:p-6">
             {activeTab === "subscriber" && (
               <div className="mb-6">
                 <SubscriberForm

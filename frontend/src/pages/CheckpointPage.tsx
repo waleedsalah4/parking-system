@@ -85,21 +85,21 @@ function CheckpointPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="border-b border-gray-200 bg-white shadow-sm">
-        <div className="mx-auto max-w-4xl px-6 py-4">
+        <div className="mx-auto max-w-4xl px-2 py-4 md:px-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <CheckCircle className="h-6 w-6 text-green-600" />
-              <h1 className="text-xl font-bold text-gray-900">
+            <div className="flex items-center gap-2 md:gap-3">
+              <CheckCircle className="size-3 text-green-600 md:size-6" />
+              <h1 className="text-base font-bold text-gray-900 md:text-xl">
                 Checkout Checkpoint
               </h1>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-2 md:gap-4">
               <span className="text-sm text-gray-600">
                 Employee: {user?.username}
               </span>
               <button
                 onClick={() => navigate("/")}
-                className="rounded-lg bg-gray-200 px-4 py-2 text-sm hover:bg-gray-300"
+                className="hidden rounded-lg bg-gray-200 px-4 py-2 text-sm hover:bg-gray-300 md:flex"
               >
                 Back to Home
               </button>
@@ -108,8 +108,8 @@ function CheckpointPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-4xl px-6 py-8">
-        <div className="rounded-lg bg-white p-6 shadow-lg">
+      <div className="mx-auto max-w-4xl px-2 py-8 md:px-6">
+        <div className="rounded-lg bg-white p-3 shadow-lg md:p-6">
           <h2 className="mb-6 text-lg font-semibold text-gray-900">
             Process Checkout
           </h2>
@@ -119,7 +119,7 @@ function CheckpointPage() {
             <label className="mb-2 block text-sm font-medium text-gray-700">
               Ticket ID (Scan QR Code)
             </label>
-            <div className="flex space-x-3">
+            <div className="flex flex-col gap-3 md:flex-row">
               <input
                 type="text"
                 value={ticketId}
@@ -127,20 +127,22 @@ function CheckpointPage() {
                 placeholder="Paste or type ticket ID"
                 className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-green-500"
               />
-              <button
-                onClick={handleLookup}
-                disabled={!ticketId.trim() || isProcessing}
-                className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
-              >
-                {isTicketLoading ? "Looking up..." : "Lookup"}
-              </button>
-              <button
-                onClick={() => handleCheckout(false)}
-                disabled={!ticketId.trim() || isProcessing}
-                className="cursor-pointer rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
-              >
-                {checkOutMutation.isPending ? "Processing..." : "Checkout"}
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleLookup}
+                  disabled={!ticketId.trim() || isProcessing}
+                  className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {isTicketLoading ? "Looking up..." : "Lookup"}
+                </button>
+                <button
+                  onClick={() => handleCheckout(false)}
+                  disabled={!ticketId.trim() || isProcessing}
+                  className="cursor-pointer rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
+                >
+                  {checkOutMutation.isPending ? "Processing..." : "Checkout"}
+                </button>
+              </div>
             </div>
           </div>
 

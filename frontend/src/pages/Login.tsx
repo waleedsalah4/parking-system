@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/services/api";
@@ -9,21 +9,21 @@ import { useAuthStore } from "@/store/authStore";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const { isAuthenticated, user, setAuth } = useAuthStore();
+  const { setAuth } = useAuthStore();
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      if (user?.role === "admin") {
-        navigate("/admin/users");
-      } else {
-        navigate("/checkpoint");
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     if (user?.role === "admin") {
+  //       navigate("/admin/users");
+  //     } else {
+  //       navigate("/checkpoint");
+  //     }
+  //   }
+  // }, []);
 
   const {
     mutate: loginUser,

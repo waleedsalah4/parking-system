@@ -19,19 +19,19 @@ export default function GateHeader({
   }, []);
   return (
     <div className="bg-white shadow-sm">
-      <div className="mx-auto max-w-6xl px-6 py-4">
+      <div className="mx-auto max-w-6xl px-2 py-4 md:px-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => navigate(-1)}
-              className="text-gray-600 hover:text-gray-900"
+              className="hidden text-gray-600 hover:text-gray-900 md:flex"
             >
               ← Back
             </button>
             <div className="flex items-center space-x-3">
-              <Building className="h-6 w-6 text-blue-600" />
+              <Building className="size-4 text-blue-600 md:size-6" />
               <div>
-                <h1 className="text-xl font-bold text-gray-900">
+                <h1 className="text-base font-bold text-gray-900 md:text-xl">
                   {gate?.name}
                 </h1>
                 <p className="text-sm text-gray-600">{gate?.location}</p>
@@ -39,8 +39,8 @@ export default function GateHeader({
             </div>
           </div>
 
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
+          <div className="flex flex-col items-center gap-3 md:flex-row md:gap-6">
+            <div className="flex items-center gap-x-2">
               <div
                 className={`h-3 w-3 rounded-full ${
                   status === "connected"
