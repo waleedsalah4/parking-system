@@ -1,10 +1,9 @@
 import { useReports, useWebSocketAdminUpdate } from "@/hooks/useAdminQueries";
-
 import { useAdminLogsStore } from "@/store/adminLogStore";
 
 function AdminView() {
   const { logs } = useAdminLogsStore();
-  console.log(logs);
+  console.log("AdminView logs:", logs);
   useWebSocketAdminUpdate();
   const parkingQuery = useReports();
   const parkingData = parkingQuery.data;
@@ -21,6 +20,7 @@ function AdminView() {
     (sum: number, zone: any) => sum + zone.free,
     0
   );
+
   return (
     <div className="space-y-6">
       <div className="rounded-lg bg-white p-6 shadow-sm">

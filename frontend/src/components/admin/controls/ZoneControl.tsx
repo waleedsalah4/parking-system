@@ -16,7 +16,12 @@ function ZoneControl({
         {zonesData?.map((zone) => (
           <div key={zone.id} className="rounded-lg border p-3">
             <div className="mb-2 flex items-center justify-between">
-              <span className="font-medium text-gray-900">{zone.name}</span>
+              <div className="flex items-center gap-1">
+                <span className="font-medium text-gray-900">{zone.name}</span>
+                <span
+                  className={`size-2 rounded-full ${zone.open ? "bg-green-500" : "bg-red-500"}`}
+                />
+              </div>
               <button
                 onClick={() => toggleZone(zone.id, !zone.open)}
                 className={`cursor-pointer rounded px-2 py-1 text-xs ${

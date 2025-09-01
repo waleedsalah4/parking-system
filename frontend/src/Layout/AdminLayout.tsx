@@ -1,11 +1,23 @@
 import { Navigate, NavLink, Outlet } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { Building, Car, Settings, Users } from "lucide-react";
+import { useEffect } from "react";
+import { wsService } from "@/services/ws";
 
 function AdminLayout() {
   const { user, isAuthenticated } = useAuthStore();
 
-  if (!isAuthenticated && user?.role !== "admin") {
+  // Initialize WebSocket connection for admin pages
+  useEffect(() => {
+    wsService.connect();
+
+    return () => {
+      // Don't disconnect here as other parts of the app might need the connection
+      // wsService.disconnect();
+    };
+  }, []);
+
+  if (!isAuthenticated || user?.role !== "admin") {
     return <Navigate to="/login" replace />;
   }
 

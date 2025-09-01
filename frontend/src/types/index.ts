@@ -119,3 +119,14 @@ export interface Categories {
   rateNormal: number;
   rateSpecial: number;
 }
+
+export interface Log {
+  id: string;
+  message: string;
+  timestamp: string;
+  adminId: string;
+  action: string;
+  targetType: string;
+  targetId: string;
+  details: any;
+}

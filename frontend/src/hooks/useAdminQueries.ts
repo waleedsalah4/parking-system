@@ -119,6 +119,7 @@ export function useToggleZone() {
       api.toggleZoneOpen(body.id, body.open),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.zones });
+      queryClient.invalidateQueries({ queryKey: queryKeys.reports });
       toast.success("Zone changed successfully");
     },
     onError: (error: ApiError) => {
@@ -192,7 +193,6 @@ export function useWebSocketAdminUpdate() {
   useEffect(() => {
     const handleAdminUpdate = (data: any) => {
       setLogs(data);
-      console.log("handleAdminUpdate runs");
       // Invalidate and refetch zones
       queryClient.invalidateQueries({
         queryKey: queryKeys.zones,
@@ -207,7 +207,8 @@ export function useWebSocketAdminUpdate() {
 
     const handleConnectionChange = (data: { status: string }) => {
       if (data.status === "connected") {
-        console.log("admin => WebSocket connection status:", data.status);
+        // Subscribe to admin updates when connected
+        wsService.subscribeAdmin();
       }
     };
 
@@ -215,9 +216,15 @@ export function useWebSocketAdminUpdate() {
     wsService.on("admin-update", handleAdminUpdate);
     wsService.on("connection", handleConnectionChange);
 
+    // Subscribe to admin updates if already connected
+    if (wsService.getStatus() === "connected") {
+      wsService.subscribeAdmin();
+    }
+
     return () => {
       wsService.off("admin-update", handleAdminUpdate);
       wsService.off("connection", handleConnectionChange);
+      wsService.unsubscribeAdmin();
     };
   }, [queryClient]);
 }

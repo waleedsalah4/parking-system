@@ -35,7 +35,6 @@ class WebSocketService {
     this.ws.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
-        console.log("WebSocket message received:", message); // Debug log
         this.emit(message.type, message.payload);
       } catch (error) {
         console.error("WebSocket message error:", error);
@@ -66,15 +65,32 @@ class WebSocketService {
     this.pendingSubscriptions.add(gateId);
 
     if (this.ws?.readyState === WebSocket.OPEN) {
-      console.log("Subscribing to gate:", gateId); // Debug log
       this.ws.send(
         JSON.stringify({
           type: "subscribe",
           payload: { gateId },
         })
       );
-    } else {
-      console.log("WebSocket not ready, queuing subscription for:", gateId);
+    }
+  }
+
+  subscribeAdmin() {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.ws.send(
+        JSON.stringify({
+          type: "subscribe-admin",
+        })
+      );
+    }
+  }
+
+  unsubscribeAdmin() {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.ws.send(
+        JSON.stringify({
+          type: "unsubscribe-admin",
+        })
+      );
     }
   }
 
@@ -82,7 +98,6 @@ class WebSocketService {
     this.pendingSubscriptions.delete(gateId);
 
     if (this.ws?.readyState === WebSocket.OPEN) {
-      console.log("Unsubscribing from gate:", gateId); // Debug log
       this.ws.send(
         JSON.stringify({
           type: "unsubscribe",
@@ -97,7 +112,6 @@ class WebSocketService {
       this.listeners.set(event, []);
     }
     this.listeners.get(event)!.push(callback);
-    console.log(`Event listener added for: ${event}`); // Debug log
   }
 
   off(event: string, callback: Function) {
@@ -106,7 +120,6 @@ class WebSocketService {
       const index = eventListeners.indexOf(callback);
       if (index > -1) {
         eventListeners.splice(index, 1);
-        console.log(`Event listener removed for: ${event}`); // Debug log
       }
     }
   }
@@ -114,12 +127,7 @@ class WebSocketService {
   private emit(event: string, data: any) {
     const eventListeners = this.listeners.get(event);
     if (eventListeners) {
-      console.log(
-        `Emitting event: ${event} to ${eventListeners.length} listeners`
-      ); // Debug log
       eventListeners.forEach((callback) => callback(data));
-    } else {
-      console.log(`No listeners for event: ${event}`); // Debug log
     }
   }
 

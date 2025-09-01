@@ -16,9 +16,8 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      //   isAuthenticated: false,
-      isAuthenticated: !!localStorage.getItem(localStorageEnum.token),
-      user: JSON.parse(localStorage.getItem(localStorageEnum.user) as string),
+      isAuthenticated: false,
+      user: null,
 
       setAuth: (authData) =>
         set({

@@ -1,17 +1,17 @@
 import { create } from "zustand";
+import type { Log } from "@/types";
 
 interface AdminLogs {
-  logs: any;
-  setLogs: (logs: any) => void;
+  logs: Log[];
+  setLogs: (logs: Log) => void;
 }
 
 export const useAdminLogsStore = create<AdminLogs>()((set) => ({
-  //   isAuthenticated: false,
   logs: [],
 
-  setLogs: (log: any) => {
+  setLogs: (log: Log) => {
     set((state) => ({
-      logs: state.logs && [...state.logs, log],
+      logs: [...state.logs, log],
     }));
   },
 }));

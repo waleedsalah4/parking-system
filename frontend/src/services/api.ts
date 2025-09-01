@@ -210,13 +210,10 @@ class ApiService {
   }
 
   async toggleZoneOpen(id: string, open: boolean) {
-    return (
-      this,
-      this.request(`/admin/zones/${id}/open`, {
-        method: "PUT",
-        body: JSON.stringify({ open }),
-      })
-    );
+    return this.request(`/admin/zones/${id}/open`, {
+      method: "PUT",
+      body: JSON.stringify({ open }),
+    });
   }
   async addRush(body: { weekDay: number; from: string; to: string }) {
     return this.request("/admin/rush-hours", {
