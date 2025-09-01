@@ -1,3 +1,4 @@
+import { Spinner } from "@/components/shared/Spinner";
 import { useReports } from "@/hooks/useAdminQueries";
 
 export default function Reports() {
@@ -12,7 +13,12 @@ export default function Reports() {
         </h2>
       </div>
 
-      {reportsData && (
+      {reportsQuery.isLoading && (
+        <div className="flex items-center justify-center">
+          <Spinner size={32} className="text-blue-600" />
+        </div>
+      )}
+      {reportsData && reportsData.length > 0 ? (
         <div className="overflow-auto">
           <table className="table w-full text-sm">
             <thead className="bg-gray-50">
@@ -81,6 +87,8 @@ export default function Reports() {
             </tbody>
           </table>
         </div>
+      ) : (
+        <div>there's no current info to view</div>
       )}
     </div>
   );

@@ -39,7 +39,7 @@ export default function AdminLogin() {
         setAuth(data);
         toast.success("Logged in successfully");
         if (data.user.role === "admin") {
-          navigate("/admin/users");
+          navigate("/admin");
         } else {
           navigate("/checkpoint");
         }

@@ -2,6 +2,7 @@ import AddRushHour from "@/components/admin/controls/AddRushHour";
 import AddVacation from "@/components/admin/controls/AddVacation";
 import CategoryRateEditor from "@/components/admin/controls/CategoryRateEditor";
 import ZoneControl from "@/components/admin/controls/ZoneControl";
+import { Spinner } from "@/components/shared/Spinner";
 import {
   useAddRushHour,
   useAddVacation,
@@ -71,19 +72,38 @@ function Control() {
         <h3 className="mb-4 text-lg font-semibold text-gray-900">
           Category Rates
         </h3>
+        {categoriesQuery.isLoading && (
+          <div className="flex items-center justify-center">
+            <Spinner size={32} className="text-blue-600" />
+          </div>
+        )}
         <div className="space-y-4">
-          {categoriesData?.map((category) => (
-            <CategoryRateEditor
-              key={category.id}
-              category={category}
-              onUpdate={updateCategoryRates}
-              isLoading={updateCategoryMutation.isPending}
-            />
-          ))}
+          {categoriesData && categoriesData.length > 0 ? (
+            categoriesData.map((category) => (
+              <CategoryRateEditor
+                key={category.id}
+                category={category}
+                onUpdate={updateCategoryRates}
+                isLoading={updateCategoryMutation.isPending}
+              />
+            ))
+          ) : (
+            <div>there's no current categories to view</div>
+          )}
         </div>
       </div>
 
-      <ZoneControl zonesData={zonesData} toggleZone={toggleZone} />
+      {zonesQuery.isLoading && (
+        <div className="flex items-center justify-center">
+          <Spinner size={32} className="text-blue-600" />
+        </div>
+      )}
+
+      {zonesData && zonesData.length > 0 ? (
+        <ZoneControl zonesData={zonesData} toggleZone={toggleZone} />
+      ) : (
+        <div>there's no current zones to view</div>
+      )}
 
       {/* Rush Hours */}
       <AddRushHour

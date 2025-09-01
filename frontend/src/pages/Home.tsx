@@ -1,6 +1,7 @@
 import { Building } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGates } from "@/hooks/useGateQueries";
+import { Spinner } from "@/components/shared/Spinner";
 
 function Home() {
   const navigate = useNavigate();
@@ -12,6 +13,11 @@ function Home() {
     <div className="mx-auto max-w-4xl p-6">
       <div className="mb-8 rounded-lg bg-white p-8 shadow-lg">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {gatesQuery.isLoading && (
+            <div className="col-span-full flex items-center justify-center">
+              <Spinner size={32} className="text-blue-600" />
+            </div>
+          )}
           {gates?.map((gate) => (
             <div
               key={gate.id}

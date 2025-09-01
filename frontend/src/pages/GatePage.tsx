@@ -17,6 +17,7 @@ import UsersTabs from "@/components/gates/UsersTabs";
 import SubscriberForm from "@/components/gates/SubscriberForm";
 import ZoneCard from "@/components/gates/ZoneCard";
 import useDebounce from "@/hooks/useDebounce";
+import { Spinner } from "@/components/shared/Spinner";
 
 function GatePage() {
   const { gateId = "" } = useParams();
@@ -83,6 +84,14 @@ function GatePage() {
       );
     }
   };
+
+  if (gatesQuery.isLoading || zonesQuery.isLoading) {
+    return (
+      <div className="col-span-full flex items-center justify-center">
+        <Spinner size={32} className="text-blue-600" />
+      </div>
+    );
+  }
 
   if (!gate && !gatesQuery.isLoading) {
     return <GateNotFound />;
