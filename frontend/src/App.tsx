@@ -11,6 +11,7 @@ import Login from "@/pages/Login";
 import Users from "@/pages/admin/Users";
 import Reports from "@/pages/admin/Reports";
 import Control from "@/pages/admin/Control";
+import AdminView from "./components/admin/AdminView";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
         path: "/admin",
         element: <AdminLayout />,
         children: [
+          { index: true, element: <AdminView /> },
           { path: "users", element: <Users /> },
           { path: "reports", element: <Reports /> },
           { path: "control", element: <Control /> },

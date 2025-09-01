@@ -1,6 +1,7 @@
 import type {
   Gate,
   LoginResponse,
+  ParkingState,
   Subscription,
   Ticket,
   UserGateTab,
@@ -168,6 +169,11 @@ class ApiService {
       method: "POST",
       body: JSON.stringify(body),
     });
+  }
+
+  //reports
+  async getParkingState(): Promise<ParkingState[]> {
+    return this.request<ParkingState[]>(`/admin/reports/parking-state/`);
   }
 }
 
