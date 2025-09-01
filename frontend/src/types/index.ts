@@ -112,3 +112,10 @@ export interface Employee {
   startsAt: string;
   userName: string;
 }
+
+export interface Categories {
+  id: string;
+  name: string;
+  rateNormal: number;
+  rateSpecial: number;
+}

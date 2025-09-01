@@ -12,7 +12,6 @@ function Users() {
   //queries
   const employeesQuery = useEmployees();
   const employeesData = employeesQuery.data;
-  console.log(employeesData);
 
   //mutations
   // const createEmployeeMutation = useCreateEmployee();

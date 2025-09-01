@@ -1,4 +1,5 @@
 import type {
+  Categories,
   Employee,
   Gate,
   LoginResponse,
@@ -186,6 +187,45 @@ class ApiService {
     role: "employee" | "admin";
   }) {
     return this.request("/admin/subscriptions", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+  }
+
+  async getCategories(): Promise<Categories[]> {
+    return this.request<Categories[]>(`/master/categories`);
+  }
+  async getAllZones(): Promise<Zone[]> {
+    return this.request<Zone[]>(`/master/zones`);
+  }
+  async updateCategoryRates(
+    id: string,
+    rateNormal: number,
+    rateSpecial: number
+  ) {
+    return this.request(`/admin/categories/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({ rateNormal, rateSpecial }),
+    });
+  }
+
+  async toggleZoneOpen(id: string, open: boolean) {
+    return (
+      this,
+      this.request(`/admin/zones/${id}/open`, {
+        method: "PUT",
+        body: JSON.stringify({ open }),
+      })
+    );
+  }
+  async addRush(body: { weekDay: number; from: string; to: string }) {
+    return this.request("/admin/rush-hours", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+  }
+  async addVacation(body: { name: string; from: string; to: string }) {
+    return this.request("/admin/vacations", {
       method: "POST",
       body: JSON.stringify(body),
     });

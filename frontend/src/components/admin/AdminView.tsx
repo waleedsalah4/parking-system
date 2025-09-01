@@ -1,33 +1,14 @@
-import { queryKeys, useReports } from "@/hooks/useAdminQueries";
-import { wsService } from "@/services/ws";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useReports, useWebSocketAdminUpdate } from "@/hooks/useAdminQueries";
+
+import { useAdminLogsStore } from "@/store/adminLogStore";
 
 function AdminView() {
-  const [auditLog, setAuditLog] = useState<any[]>([]);
-  const queryClient = useQueryClient();
+  const { logs } = useAdminLogsStore();
+  console.log(logs);
+  useWebSocketAdminUpdate();
   const parkingQuery = useReports();
   const parkingData = parkingQuery.data;
 
-  useEffect(() => {
-    const handleAdminUpdate = (data: any) => {
-      setAuditLog((prev) => [data, ...prev.slice(0, 9)]); // Keep last 10 entries
-      // Refresh parking state on relevant updates
-      if (
-        ["zone-opened", "zone-closed", "category-rates-changed"].includes(
-          data.action
-        )
-      ) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.reports });
-      }
-    };
-
-    wsService.on("admin-update", handleAdminUpdate);
-
-    return () => {
-      wsService.off("admin-update", handleAdminUpdate);
-    };
-  }, []);
   const totalSlots = parkingData?.reduce(
     (sum: number, zone: any) => sum + zone.totalSlots,
     0
@@ -71,10 +52,10 @@ function AdminView() {
           Recent Activity
         </h3>
         <div className="space-y-3">
-          {auditLog.length === 0 ? (
+          {logs.length === 0 ? (
             <p className="text-sm text-gray-500">No recent activity</p>
           ) : (
-            auditLog.map((entry: any, idx: number) => (
+            logs.map((entry: any, idx: number) => (
               <div
                 key={idx}
                 className="flex items-center justify-between rounded-lg bg-gray-50 p-3"

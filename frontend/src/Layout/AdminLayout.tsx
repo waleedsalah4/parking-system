@@ -1,6 +1,6 @@
 import { Navigate, NavLink, Outlet } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
-import { Car, Settings, Users } from "lucide-react";
+import { Building, Car, Settings, Users } from "lucide-react";
 
 function AdminLayout() {
   const { user, isAuthenticated } = useAuthStore();
@@ -43,6 +43,12 @@ function AdminLayout() {
             <nav className="invisible-scrollbar flex flex-row gap-2 overflow-x-scroll md:flex-col">
               {[
                 {
+                  id: "dashboard",
+                  link: "/admin",
+                  name: "Dashboard",
+                  icon: Building,
+                },
+                {
                   id: "parking-state",
                   link: "/admin/reports",
                   name: "Parking State",
@@ -66,6 +72,7 @@ function AdminLayout() {
                   <NavLink
                     key={item.id}
                     to={item.link}
+                    end
                     className={({ isActive }) =>
                       isActive
                         ? "flex w-full items-center space-x-3 rounded-lg bg-purple-100 px-3 py-2 text-purple-700"
